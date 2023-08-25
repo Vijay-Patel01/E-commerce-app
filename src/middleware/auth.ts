@@ -16,7 +16,7 @@ const isLoggedIn = catchAsync(async (req: Request, res: Response, next: NextFunc
         if (decoded.email) {
             const loginVendor = await Vendor.findOne({ where: { email: decoded.email } });
             if (!loginVendor) {
-                return response.errorResponse(res, 401, 'Unauthorized, Only vendor can add product');
+                return response.errorResponse(res, 401, 'Unauthorized, Only vendor can access this route');
             }
             res.locals.vendor = loginVendor;
             return next();

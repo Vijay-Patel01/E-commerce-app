@@ -65,9 +65,39 @@ const vendorLoginValidation = async (req: Request, res: Response, next: NextFunc
     next();
 }
 
+const vendorUpdate = async (req: Request, res: Response, next: NextFunction) => {
+    const body = joi.object({
+        username: joi.string(),
+        email: joi.string().email(),
+        status: joi.string().valid('active', 'inactive')
+    });
+    const { error, value } = body.validate(req.body);
+    if (error) {
+        return validationResponse(res,error);
+    };
+    res.locals.vendor = value;
+    next();
+}
+
+const userUpdate = async (req: Request, res: Response, next: NextFunction) => {
+    const body = joi.object({
+        name: joi.string(),
+        email: joi.string().email(),
+        status: joi.string().valid('active', 'inactive'),
+        });
+        const { error, value } = body.validate(req.body);
+        if (error) {
+            return validationResponse(res,error);
+        };
+        res.locals.updateUser = value;
+        next();
+}
+
 export default {
     authValidation,
     loginValidation,
     vendorAddValidation,
-    vendorLoginValidation
+    vendorLoginValidation,
+    userUpdate,
+    vendorUpdate
 }

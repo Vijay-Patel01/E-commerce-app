@@ -2,11 +2,15 @@ import express, { Express, Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv';
 import db from './database/config/config';
 import routes from './routes';
+import morgan from 'morgan';
+
 
 const app: Express = express();
 dotenv.config({ path: './.env' });
 
 const port = process.env.APP_PORT || 3000;
+
+app.use(morgan('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

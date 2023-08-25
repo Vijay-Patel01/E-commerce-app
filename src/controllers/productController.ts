@@ -44,6 +44,9 @@ const uploadImages = upload.fields([
 // })
 
 const create = catchAsync(async (req: Request, res: Response) => {
+    if(!res.locals.vendor){
+        return response.errorResponse(res,401,'Unauthorized, Only vendor can add product');
+    }
     res.locals.product.vendorId = res.locals.vendor.id;
     const product = await Product.create(res.locals.product);
     if (product) {

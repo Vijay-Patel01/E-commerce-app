@@ -68,10 +68,22 @@ const vendorLogin = catchAsync(async (req: Request, res: Response,) => {
     return response.response(res, 201, { vendor, token }, 'SignIn successful');
 });
 
+const logout = catchAsync(async (req: Request, res: Response,) => {
+    const authHeader: any = req.headers["authorization"];
+    jwtToken.sign(authHeader, "", { expiresIn: 1 }, (logout, err) => {
+        if (logout) {
+            return response.response(res, 200, {}, 'Logout successful');
+        } else {
+            return response.errorResponse(res, 400, 'Logout failed');
+        }
+    });
+});
+
 
 
 export default {
     signup,
     login,
-    vendorLogin
+    vendorLogin,
+    logout
 }
