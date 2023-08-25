@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
 const Vendor = db.vendors;
+const Product = db.products;
 
 const create = catchAsync(async (req: Request, res: Response) => {
     const vendorUsername = await Vendor.findOne({
@@ -42,7 +43,17 @@ const updateVendor = catchAsync(async (req: Request, res: Response) => {
         where: { id }
     });
     return response.response(res, 200, { updatedVendor }, 'Vendor updated successful');
-})
+});
+
+const getMyProduct = catchAsync(async (req: Request, res: Response) => {
+    const id = res.locals.vendor.id;
+    console.log(id);
+    
+    const products = await Product.findAll({
+        where: { vendorId:id }
+    });
+    return response.response(res, 200, { products }, 'Products fetched successful');
+});
 
 const getAllVendor = factory.getAll(Vendor);
 const getOneVendor = factory.getOne(Vendor);
@@ -53,5 +64,6 @@ export default {
     getAllVendor,
     getOneVendor,
     deleteVendor,
-    updateVendor
+    updateVendor,
+    getMyProduct
 }

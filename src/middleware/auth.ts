@@ -19,7 +19,10 @@ const isLoggedIn = catchAsync(async (req: Request, res: Response, next: NextFunc
                 return response.errorResponse(res, 401, 'Unauthorized, Only vendor can access this route');
             }
             res.locals.vendor = loginVendor;
+            console.log(-2);
+
             return next();
+
         }
         if (decoded.id) {
             const loginUser = await User.findOne({ where: { id: decoded.id } });
@@ -34,26 +37,25 @@ const isLoggedIn = catchAsync(async (req: Request, res: Response, next: NextFunc
     return response.errorResponse(res, 401, 'You are not login please login!');
 });
 
-const restrictTo = (...roles: any) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        if (!roles.includes(res.locals.user.role)) {
-            return response.errorResponse(res, 401, 'You are not authorized to access this resource');
-        }
-        next();
+const adminOnly = (req: Request, res: Response, next: NextFunction) => {
+    if (!res.locals.user) {
+        return response.errorResponse(res, 401, 'You are not authorized to access this resource');
     }
+    if (res.locals.user.role !== 'admin') {
+        return response.errorResponse(res, 401, 'You are not authorized to access this resource');
+    }
+    next();
 }
 
-const vendorOnly = () => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        if(!res.locals.vendor){
-            return response.errorResponse(res,401,'Unauthorized, Only vendor access this resource');
-        }
-        next();
+const vendorOnly = (req: Request, res: Response, next: NextFunction) => {
+    if (!res.locals.vendor) {
+        return response.errorResponse(res, 401, 'Unauthorized, Only vendor access this resource');
     }
+    next();
 }
 
 export default {
     isLoggedIn,
-    restrictTo,
+    adminOnly,
     vendorOnly
 }
