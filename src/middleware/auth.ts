@@ -43,7 +43,17 @@ const restrictTo = (...roles: any) => {
     }
 }
 
+const vendorOnly = () => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        if(!res.locals.vendor){
+            return response.errorResponse(res,401,'Unauthorized, Only vendor access this resource');
+        }
+        next();
+    }
+}
+
 export default {
     isLoggedIn,
     restrictTo,
+    vendorOnly
 }

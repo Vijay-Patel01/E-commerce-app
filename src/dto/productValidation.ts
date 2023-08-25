@@ -23,4 +23,24 @@ const createValidation = (req: Request, res: Response, next: NextFunction) => {
     next();
 }
 
-export default {createValidation};
+const ProductUpdate = (req: Request, res: Response, next: NextFunction) => {
+    const body = joi.object({
+        name: joi.string(),
+        category: joi.string(),
+        description: joi.string(),
+        price: joi.number(),
+        stock: joi.number(),
+        status: joi.string().valid('active', 'inactive')
+        });
+        const { error, value } = body.validate(req.body);
+        if (error) {
+            return validationResponse(res,error);
+        };
+        res.locals.product = value;
+        next();
+}
+
+export default {
+    createValidation,
+    ProductUpdate
+};

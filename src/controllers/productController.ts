@@ -4,12 +4,13 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import catchAsync from '../service/catchAsync';
 import multer, { FileFilterCallback } from 'multer';
 import sharp from 'sharp';
+import factory from '../service/factory';
 
 const Product = db.products;
 
 const fileStorage = multer.memoryStorage();
 
-const fileFilter = (request: Request, file: Express.Multer.File,callback:FileFilterCallback) : void => {
+const fileFilter = (request: Request, file: Express.Multer.File, callback: FileFilterCallback): void => {
     if (
         file.mimetype === 'image/png' ||
         file.mimetype === 'image/jpg' ||
@@ -44,9 +45,6 @@ const uploadImages = upload.fields([
 // })
 
 const create = catchAsync(async (req: Request, res: Response) => {
-    if(!res.locals.vendor){
-        return response.errorResponse(res,401,'Unauthorized, Only vendor can add product');
-    }
     res.locals.product.vendorId = res.locals.vendor.id;
     const product = await Product.create(res.locals.product);
     if (product) {
@@ -55,6 +53,45 @@ const create = catchAsync(async (req: Request, res: Response) => {
     return response.errorResponse(res, 400, 'Something went wrong in product add');
 });
 
+const getAllProducts = catchAsync(async (req: Request, res: Response) => {
+    const docs = await Product.findAll({where:{
+        status:'active'
+    }});
+    return response.response(res, 201, { docs }, 'Data get successful');
+
+});
+
+const getOneProduct =  catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const doc = await Product.findOne({
+        where: [{id},
+        {status:'active'}]
+    });
+    if (!doc) {
+        return response.errorResponse(res, 400, 'No data found with this id');
+    }
+    return response.response(res, 201, { doc }, 'Data get successful');
+});
+
+const updateProduct = catchAsync(async (req: Request, res: Response) => {
+    const updateProduct = await Product.update(res.locals.product, {
+        where: {id: req.params.id}
+    });
+    if (!updateProduct) {
+        return response.errorResponse(res, 400, 'Something went wrong in product update');
+        }
+        const product = await Product.findOne({where:{
+            id : req.params.id
+        }});
+        return response.response(res, 200, { product }, 'Product updated successful');
+});
+
+const deleteProduct = factory.deleteOne(Product);
+
 export default {
-    create
+    create,
+    getAllProducts,
+    getOneProduct,
+    deleteProduct,
+    updateProduct
 };

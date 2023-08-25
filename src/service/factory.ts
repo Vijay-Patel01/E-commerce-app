@@ -3,15 +3,12 @@ import express, { Express, Request, Response, NextFunction, query } from 'expres
 import catchAsync from '../service/catchAsync';
 
 const getAll = (Model: any) => catchAsync(async (req: Request, res: Response) => {
-
     const docs = await Model.findAll();
     return response.response(res, 201, { docs }, 'Data get successful');
 
 });
 
 const getOne = (Model: any) => catchAsync(async (req: Request, res: Response) => {
-    console.log(res.locals.Model);
-
     const id = req.params.id;
     const doc = await Model.findByPk(id);
     if (!doc) {
