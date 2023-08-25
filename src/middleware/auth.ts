@@ -6,20 +6,30 @@ import catchAsync from '../service/catchAsync';
 import response from '../service/Response';
 
 const User = db.users;
+const Vendor = db.vendors;
 
 const isLoggedIn = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers?.authorization?.replace('Bearer ', '')?.replace('bearer ', '').trim();
-    
+
     if (token) {
         const decoded: any = jwt_decode(token);
-        const loginUser = await User.findOne({ where: { id: decoded.id } });
-        if (!loginUser) {
-
-            return response.errorResponse(res, 401, 'Unauthorized, Invalid token');
+        if (decoded.email) {
+            const loginVendor = await Vendor.findOne({ where: { email: decoded.email } });
+            if (!loginVendor) {
+                return response.errorResponse(res, 401, 'Unauthorized, Only vendor can add product');
+            }
+            res.locals.vendor = loginVendor;
+            return next();
         }
-        res.locals.user = loginUser;
-        return next();
-        
+        if (decoded.id) {
+            const loginUser = await User.findOne({ where: { id: decoded.id } });
+            if (!loginUser) {
+
+                return response.errorResponse(res, 401, 'Unauthorized, Invalid token');
+            }
+            res.locals.user = loginUser;
+            return next();
+        }
     }
     return response.errorResponse(res, 401, 'You are not login please login!');
 });
@@ -35,5 +45,5 @@ const restrictTo = (...roles: any) => {
 
 export default {
     isLoggedIn,
-    restrictTo
+    restrictTo,
 }

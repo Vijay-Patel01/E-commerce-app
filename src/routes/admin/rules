@@ -1,7 +1,0 @@
-export default{
-    xyz:{
-    email: joi.string().email(),
-    username: joi.string(),
-    password: joi.string().required()
-}
-}

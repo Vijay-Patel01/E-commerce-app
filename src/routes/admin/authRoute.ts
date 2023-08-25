@@ -1,5 +1,5 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
-import validation from '../../middleware/dto/adminValidation';
+import express from 'express';
+import validation from '../../dto/adminValidation';
 import authController from '../../controllers/Admin/authController';
 const router = express.Router();
 

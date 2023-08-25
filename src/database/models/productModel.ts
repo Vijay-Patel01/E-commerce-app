@@ -20,6 +20,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
         stock: {
             type: DataTypes.INTEGER
         },
+        vendorId:{
+            type:DataTypes.INTEGER,
+            references:{
+                model:'vendors',
+                key:'id'
+            }
+        },
         cover_image:{
             type: DataTypes.STRING
         },

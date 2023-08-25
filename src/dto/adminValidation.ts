@@ -1,7 +1,6 @@
-import joi, { any, object } from 'joi';
-
+import joi from 'joi';
 import express, { Request, Response, NextFunction } from 'express';
-import response from '../../service/Response';
+import response from '../service/Response';
 
 const validationResponse = (res: Response, err: any) => {
     response.errorResponse(res, 400, err.details[0].message)
@@ -20,7 +19,7 @@ const authValidation = async (req: Request, res: Response, next: NextFunction) =
     if (error) {
         return validationResponse(res ,error);
     };
-    req.body = value;
+    res.locals.user = value;
     next();
 }
 const loginValidation = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,7 +31,7 @@ const loginValidation = async (req: Request, res: Response, next: NextFunction) 
     if (error) {
         return validationResponse(res ,error);
     };
-    req.body = value;
+    res.locals.user = value;
     next()
 }
 
@@ -48,7 +47,7 @@ const vendorAddValidation = async (req: Request, res: Response, next: NextFuncti
     if (error) {
         return validationResponse(res ,error);
     };
-    req.body = value;
+    res.locals.vendor = value;
     next();
 }
 

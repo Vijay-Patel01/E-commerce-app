@@ -11,45 +11,42 @@ const User = db.users;
 const Vendor = db.vendors;
 
 const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const alreadyUser = await User.findOne({ where: { email: req.body.email } });
+    const alreadyUser = await User.findOne({ where: { email: res.locals.user.email } });
     if (alreadyUser) {
-        return response.errorResponse(res,400,'This email already taken Please use login');
+        return response.errorResponse(res, 400, 'This email already taken Please use login');
     }
-    
-    const round : number = Number(process.env.BCRYPT_ROUND) || 12 ;
-    const hashPassword = await bcrypt.hash(req.body.password, round);
-    req.body.password = hashPassword;
-    
-    const user = await User.create(req.body);
+
+    const round: number = Number(process.env.BCRYPT_ROUND) || 12;
+    const hashPassword = await bcrypt.hash(res.locals.user.password, round);
+    res.locals.user.password = hashPassword;
+
+    const user = await User.create(res.locals.user);
     if (user) {
         const id = user.id
         const token = jwtToken.sign({ id }, process.env.JWT_SECRET_KEY as string, { expiresIn: process.env.JWT_EXPIRES_IN });
-        response.response(res, 201, {
-            user,
-            token,
-        }, 'SignUp successful');
+        return response.response(res, 201, { user, token, }, 'SignUp successful');
     }
-    response.errorResponse(res, 400, 'Error creating user');
+    return response.errorResponse(res, 400, 'Error creating user');
 });
 
 const login = catchAsync(async (req: Request, res: Response,) => {
-    const user = await User.findOne({ where: { email: req.body.email } });
+    const user = await User.findOne({ where: { email: res.locals.user.email } });
     if (!user) {
-        return response.errorResponse(res,400,'Invalid email or password');
+        return response.errorResponse(res, 400, 'Invalid email or password');
     }
-    if (user.status === 'inactive'){
-        return response.errorResponse(res,400,'Your account is inactive Please contact admin');
+    if (user.status === 'inactive') {
+        return response.errorResponse(res, 400, 'Your account is inactive Please contact admin');
     }
-    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    const isMatch = await bcrypt.compare(res.locals.user.password, user.password);
     if (!isMatch) {
-        return response.errorResponse(res,400,'Invalid email or password');
+        return response.errorResponse(res, 400, 'Invalid email or password');
     }
     const id = user.id;
-    const token = jwtToken.sign({ id }, process.env.JWT_SECRET_KEY as string, { expiresIn: process.env.JWT_EXPIRES_IN});
-    response.response(res, 201, {user,token}, 'SignIn successful');
+    const token = jwtToken.sign({ id }, process.env.JWT_SECRET_KEY as string, { expiresIn: process.env.JWT_EXPIRES_IN });
+    return response.response(res, 201, { user, token }, 'SignIn successful');
 });
 
-const vendorLogin =  catchAsync(async (req: Request, res: Response,) => {
+const vendorLogin = catchAsync(async (req: Request, res: Response,) => {
     if (!res.locals.vendor.email && !res.locals.vendor.username) {
         return response.errorResponse(res, 400, 'Please enter email or username');
     }
@@ -66,9 +63,9 @@ const vendorLogin =  catchAsync(async (req: Request, res: Response,) => {
     if (!isMatch) {
         return response.errorResponse(res, 400, 'Invalid email or password');
     }
-    const id = vendor.id;
-    const token = jwtToken.sign({ id }, process.env.JWT_SECRET_KEY as string, { expiresIn: process.env.JWT_EXPIRES_IN });
-    response.response(res, 201, {vendor,token}, 'SignIn successful');
+    const email = vendor.email;
+    const token = jwtToken.sign({ email }, process.env.JWT_SECRET_KEY as string, { expiresIn: process.env.JWT_EXPIRES_IN });
+    return response.response(res, 201, { vendor, token }, 'SignIn successful');
 });
 
 

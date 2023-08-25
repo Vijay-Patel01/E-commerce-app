@@ -1,5 +1,5 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
-import validation from '../../middleware/dto/adminValidation';
+import express from 'express';
+import validation from '../../dto/adminValidation';
 import vendorController from '../../controllers/Admin/vendorController';
 import authController from '../../controllers/Admin/authController';
 import auth from '../../middleware/auth';

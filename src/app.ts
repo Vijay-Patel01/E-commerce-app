@@ -1,4 +1,4 @@
-import express, { Express} from 'express';
+import express, { Express, Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv';
 import db from './database/config/config';
 import routes from './routes';
@@ -17,6 +17,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/',routes);
 
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  return res.status(err.statusCode || 500).json({
+    status: err.status,
+    message: err.message
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
