@@ -25,6 +25,6 @@ db.vendors = require('./../models/Admin/vendorModel')(sequelize, DataTypes);
 db.products = require('./../models/productModel')(sequelize, DataTypes);
 db.carts = require('./../models/cartModel')(sequelize, DataTypes);
 
-db.carts.hasOne(db.products, { as: 'productId' });
+// db.carts.associate(db);
 
 export default db;

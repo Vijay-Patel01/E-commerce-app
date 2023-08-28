@@ -27,20 +27,35 @@ const addCart = catchAsync(async (req: Request, res: Response) => {
 
 const myCart = catchAsync(async (req: Request, res: Response) => {
     const userId = res.locals.user.id;
+    let totalAmount = 0;
     let cart = await Cart.findAll({ where: { userId } });
     if (!cart) {
         return response.errorResponse(res, 404, 'No item your cart');
     }
     for (let i = 0; i < cart.length; i++) {
         const productId = cart[i].productId
-        const product = await Product.find({ where: { id: productId } });
-        const totalPrice = cart[i].quantity * product.price;
-        cart[i]["totalPrice"] = totalPrice;
+        const product = await Product.findOne({ where: { id: productId } });
+        const price = cart[i].quantity * product.price;
+        cart[i]["totalPrice"] = price;
+        totalAmount += price;
+
     }
-    return response.response(res, 200, { cart }, 'Cart retrieved successful');
+
+    return response.response(res, 200, { cart, totalAmount }, 'Cart retrieved successful');
+});
+
+const removeFromCart = catchAsync(async (req: Request, res: Response) => {
+    const userId = res.locals.user.id;
+    const id = req.params.id;
+    const data = await Cart.destroy({ where: [{ id }, { userId }] });
+    if (!data) {
+        return response.errorResponse(res, 400, 'Product not found with this productId in your cart');
+    }
+    return response.response(res, 200, {}, 'Product removed from cart successful');
 });
 
 export default {
     addCart,
-    myCart
+    myCart,
+    removeFromCart
 }

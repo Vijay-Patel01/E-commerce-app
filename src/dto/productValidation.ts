@@ -43,7 +43,7 @@ const ProductUpdate = (req: Request, res: Response, next: NextFunction) => {
 const cartAdd = (req: Request, res: Response, next: NextFunction) => {
     const body = joi.object({
         productId: joi.number().required(),
-        quantity: joi.number().required()
+        quantity: joi.number().required().min(1).max(100),
     });
     const { error, value } = body.validate(req.body);
     if (error) {

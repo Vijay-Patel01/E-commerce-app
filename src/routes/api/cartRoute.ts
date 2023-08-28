@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.post('/addToCart',auth.isLoggedIn,validation.cartAdd,controller.addCart);
 router.get('/myCart',auth.isLoggedIn,controller.myCart);
+router.get('/removeFromCart/:id',auth.isLoggedIn,controller.removeFromCart);
 
 export default router;

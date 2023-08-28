@@ -1,3 +1,4 @@
+
 module.exports = (sequelize : any, DataTypes: any) => {
     return sequelize.define('user', {
         id:{
