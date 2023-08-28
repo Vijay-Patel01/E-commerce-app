@@ -1,4 +1,4 @@
-import {Sequelize , DataTypes } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
@@ -16,12 +16,15 @@ sequelize.authenticate().then(() => {
     console.error('Unable to connect to the database:', err);
 });
 
-const db : any = {} ;
+const db: any = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require('./../models/Admin/userModel')(sequelize,DataTypes);
-db.vendors = require('./../models/Admin/vendorModel')(sequelize,DataTypes);
-db.products = require('./../models/productModel')(sequelize,DataTypes);
+db.users = require('./../models/Admin/userModel')(sequelize, DataTypes);
+db.vendors = require('./../models/Admin/vendorModel')(sequelize, DataTypes);
+db.products = require('./../models/productModel')(sequelize, DataTypes);
+db.carts = require('./../models/cartModel')(sequelize, DataTypes);
 
-export default  db ;
+db.carts.hasOne(db.products, { as: 'productId' });
+
+export default db;

@@ -4,6 +4,7 @@ import jwtToken from 'jsonwebtoken';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import catchAsync from '../../service/catchAsync';
 import bcrypt from 'bcrypt';
+import { Op } from 'sequelize'
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
@@ -50,8 +51,15 @@ const vendorLogin = catchAsync(async (req: Request, res: Response,) => {
     if (!res.locals.vendor.email && !res.locals.vendor.username) {
         return response.errorResponse(res, 400, 'Please enter email or username');
     }
+    let whereCase = {};
+    if (res.locals.vendor.email) {
+        whereCase = { email: res.locals.vendor.email }
+    }
+    else if (res.locals.vendor.username) {
+        whereCase = { username: res.locals.vendor.username }
+    }
     const vendor = await Vendor.findOne({
-        where: {}
+        where:  whereCase 
     });
     if (!vendor) {
         return response.errorResponse(res, 400, 'Invalid email or password');

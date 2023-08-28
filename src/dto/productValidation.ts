@@ -17,7 +17,7 @@ const createValidation = (req: Request, res: Response, next: NextFunction) => {
     });
     const { error, value } = body.validate(req.body);
     if (error) {
-        return validationResponse(res ,error);
+        return validationResponse(res, error);
     };
     res.locals.product = value;
     next();
@@ -31,16 +31,30 @@ const ProductUpdate = (req: Request, res: Response, next: NextFunction) => {
         price: joi.number(),
         stock: joi.number(),
         status: joi.string().valid('active', 'inactive')
-        });
-        const { error, value } = body.validate(req.body);
-        if (error) {
-            return validationResponse(res,error);
-        };
-        res.locals.product = value;
-        next();
+    });
+    const { error, value } = body.validate(req.body);
+    if (error) {
+        return validationResponse(res, error);
+    };
+    res.locals.product = value;
+    next();
+}
+
+const cartAdd = (req: Request, res: Response, next: NextFunction) => {
+    const body = joi.object({
+        productId: joi.number().required(),
+        quantity: joi.number().required()
+    });
+    const { error, value } = body.validate(req.body);
+    if (error) {
+        return validationResponse(res, error);
+    };
+    res.locals.cartItem = value;
+    next()
 }
 
 export default {
     createValidation,
-    ProductUpdate
+    ProductUpdate,
+    cartAdd
 };
