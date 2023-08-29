@@ -1,5 +1,5 @@
 import joi from 'joi';
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import response from '../utils/response';
 
 const validationResponse = (res: Response, err: any) => {
@@ -18,7 +18,7 @@ const authValidation = async (req: Request, res: Response, next: NextFunction) =
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res ,error);
-    };
+    }
     res.locals.user = value;
     next();
 }
@@ -30,7 +30,7 @@ const loginValidation = async (req: Request, res: Response, next: NextFunction) 
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res ,error);
-    };
+    }
     res.locals.user = value;
     next()
 }
@@ -46,7 +46,7 @@ const vendorAddValidation = async (req: Request, res: Response, next: NextFuncti
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res ,error);
-    };
+    }
     res.locals.vendor = value;
     next();
 }
@@ -60,7 +60,7 @@ const vendorLoginValidation = async (req: Request, res: Response, next: NextFunc
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res ,error);
-    };
+    }
     res.locals.vendor = value;
     next();
 }
@@ -74,7 +74,7 @@ const vendorUpdate = async (req: Request, res: Response, next: NextFunction) => 
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res,error);
-    };
+    }
     res.locals.vendor = value;
     next();
 }
@@ -88,7 +88,7 @@ const userUpdate = async (req: Request, res: Response, next: NextFunction) => {
         const { error, value } = body.validate(req.body);
         if (error) {
             return validationResponse(res,error);
-        };
+        }
         res.locals.updateUser = value;
         next();
 }
@@ -103,7 +103,7 @@ const changePassword = async(req: Request, res: Response, next: NextFunction) =>
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res,error);
-    };
+    }
     res.locals.changePassword = value;
     next();
 }

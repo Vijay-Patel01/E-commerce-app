@@ -3,7 +3,7 @@ import config from '../config';
 
 const bcryptPassword = async (password: string) => {
     const round = Number(config.BCRYPT.ROUNDS) || 12;
-    return await bcrypt.hash(password, round);
+    return bcrypt.hash(password, round);
 }
 
 const comparePassword = async (bodyPassword: string, databasePassword: string) => {

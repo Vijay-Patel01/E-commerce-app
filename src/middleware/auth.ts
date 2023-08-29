@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from '../utils/jwt';
 import db from '../config.database';
 import catchAsync from '../utils/catchAsync';

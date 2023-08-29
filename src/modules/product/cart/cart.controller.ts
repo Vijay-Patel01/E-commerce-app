@@ -1,6 +1,6 @@
 import db from '../../../config.database';
 import response from '../../../utils/response';
-import express, { Express, Request, Response, NextFunction } from 'express';
+import  {  Request, Response } from 'express';
 import catchAsync from '../../../utils/catchAsync';
 
 const Cart = db.carts;

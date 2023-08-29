@@ -1,5 +1,5 @@
 module.exports = (sequelize: any, DataTypes: any) => {
-    const Cart = sequelize.define('cart', {
+    return sequelize.define('cart', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -33,5 +33,4 @@ module.exports = (sequelize: any, DataTypes: any) => {
     //             onDelete: 'CASCADE'
     //         });
     //     };
-    return Cart;
 }

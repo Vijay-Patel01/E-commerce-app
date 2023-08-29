@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import { Response } from 'express';
 export default {
     
     response(res: Response, statusCode: number, data={},message: string | 'success') {

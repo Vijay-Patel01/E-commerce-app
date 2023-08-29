@@ -1,5 +1,5 @@
 import joi from 'joi';
-import express, { Request, Response, NextFunction } from 'express';
+import  { Request, Response, NextFunction } from 'express';
 import response from '../utils/response';
 
 const validationResponse = (res: Response, err: any) => {
@@ -18,7 +18,7 @@ const createValidation = (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res, error);
-    };
+    }
     res.locals.product = value;
     next();
 }
@@ -35,7 +35,7 @@ const ProductUpdate = (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res, error);
-    };
+    }
     res.locals.product = value;
     next();
 }
@@ -48,7 +48,7 @@ const cartAdd = (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = body.validate(req.body);
     if (error) {
         return validationResponse(res, error);
-    };
+    }
     res.locals.cartItem = value;
     next()
 }

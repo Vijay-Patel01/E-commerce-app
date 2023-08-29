@@ -1,6 +1,6 @@
 import db from '../../config.database';
 import response from '../../utils/response';
-import express, { Express, Request, Response, NextFunction } from 'express';
+import  { Express, Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import multer, { FileFilterCallback } from 'multer';
 import sharp from 'sharp';

@@ -1,5 +1,5 @@
 import response from './response';
-import express, { Express, Request, Response, NextFunction, query } from 'express';
+import { Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
 
 const getAll = (Model: any) => catchAsync(async (req: Request, res: Response) => {
