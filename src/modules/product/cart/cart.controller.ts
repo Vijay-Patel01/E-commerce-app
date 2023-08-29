@@ -1,7 +1,7 @@
-import db from '../database/config/config';
-import response from '../service/Response';
+import db from '../../../config.database';
+import response from '../../../utils/response';
 import express, { Express, Request, Response, NextFunction } from 'express';
-import catchAsync from '../service/catchAsync';
+import catchAsync from '../../../utils/catchAsync';
 
 const Cart = db.carts;
 const Product = db.products;

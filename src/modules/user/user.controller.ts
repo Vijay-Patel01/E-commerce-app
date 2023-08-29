@@ -1,8 +1,8 @@
-import db from '../database/config/config';
-import response from '../service/Response';
+import db from '../../config.database';
+import response from '../../utils/response';
 import express, { Express, Request, Response, NextFunction } from 'express';
-import catchAsync from '../service/catchAsync';
-import factory from '../service/factory';
+import catchAsync from '../../utils/catchAsync';
+import factory from '../../utils/factory';
 
 const User = db.users;
 

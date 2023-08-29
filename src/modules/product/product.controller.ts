@@ -1,10 +1,10 @@
-import db from '../database/config/config';
-import response from '../service/Response';
+import db from '../../config.database';
+import response from '../../utils/response';
 import express, { Express, Request, Response, NextFunction } from 'express';
-import catchAsync from '../service/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import multer, { FileFilterCallback } from 'multer';
 import sharp from 'sharp';
-import factory from '../service/factory';
+import factory from '../../utils/factory';
 
 const Product = db.products;
 

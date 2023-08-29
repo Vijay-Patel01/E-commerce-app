@@ -1,11 +1,11 @@
-import db from '../../database/config/config';
-import response from '../../service/Response';
+import db from '../../../config.database';
+import response from '../../../utils/response';
 import jwtToken from 'jsonwebtoken';
 import express, { Express, Request, Response, NextFunction } from 'express';
-import catchAsync from '../../service/catchAsync';
+import catchAsync from '../../../utils/catchAsync';
 import bcrypt from 'bcrypt';
 import { Op } from 'sequelize'
-import Email from '../../service/sendMail';
+import Email from '../../../utils/sendMail';
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
@@ -101,7 +101,6 @@ const changePassword = catchAsync(async (req: Request, res: Response,) => {
 const logout = catchAsync(async (req: Request, res: Response,) => {
     const token = ''
     return response.response(res, 200, {token}, 'Logout successful');
-
 });
 
 

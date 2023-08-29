@@ -1,6 +1,6 @@
 import joi from 'joi';
 import express, { Request, Response, NextFunction } from 'express';
-import response from '../service/Response';
+import response from '../utils/response';
 
 const validationResponse = (res: Response, err: any) => {
     response.errorResponse(res, 400, err.details[0].message)

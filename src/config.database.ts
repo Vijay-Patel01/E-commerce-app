@@ -20,10 +20,10 @@ const db: any = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require('./../models/Admin/userModel')(sequelize, DataTypes);
-db.vendors = require('./../models/Admin/vendorModel')(sequelize, DataTypes);
-db.products = require('./../models/productModel')(sequelize, DataTypes);
-db.carts = require('./../models/cartModel')(sequelize, DataTypes);
+db.users = require('./modules/user/user.model')(sequelize, DataTypes);
+db.vendors = require('./modules/vendor/vendor.model')(sequelize, DataTypes);
+db.products = require('./modules/product/product.model')(sequelize, DataTypes);
+db.carts = require('./modules/product/cart/cart.model')(sequelize, DataTypes);
 
 // db.carts.associate(db);
 

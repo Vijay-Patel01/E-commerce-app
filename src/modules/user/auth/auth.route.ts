@@ -1,7 +1,7 @@
 import express from 'express';
-import validation from '../../dto/adminValidation';
-import authController from '../../controllers/Admin/authController';
-import auth from '../../middleware/auth';
+import validation from '../../../dto/admin.validation';
+import authController from './auth.controller';
+import auth from '../../../middleware/auth';
 const router = express.Router();
 
 router.post('/signup', validation.authValidation, authController.signup);

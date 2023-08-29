@@ -1,7 +1,7 @@
 import express from 'express';
-import validation from '../../dto/adminValidation';
-import vendorController from '../../controllers/Admin/vendorController';
-import authController from '../../controllers/Admin/authController';
+import validation from '../../dto/admin.validation';
+import vendorController from './vendor.controller';
+import authController from '../user/auth/auth.controller';
 import auth from '../../middleware/auth';
 const router = express.Router();
 

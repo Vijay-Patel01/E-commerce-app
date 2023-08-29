@@ -1,9 +1,9 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { promisify } from 'util';
 import jwt_decode from "jwt-decode";
-import db from '../database/config/config';
-import catchAsync from '../service/catchAsync';
-import response from '../service/Response';
+import db from '../config.database';
+import catchAsync from '../utils/catchAsync';
+import response from '../utils/response';
 
 const User = db.users;
 const Vendor = db.vendors;

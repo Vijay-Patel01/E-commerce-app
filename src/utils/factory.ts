@@ -1,6 +1,6 @@
-import response from '../service/Response';
+import response from './response';
 import express, { Express, Request, Response, NextFunction, query } from 'express';
-import catchAsync from '../service/catchAsync';
+import catchAsync from '../utils/catchAsync';
 
 const getAll = (Model: any) => catchAsync(async (req: Request, res: Response) => {
     const docs = await Model.findAll();

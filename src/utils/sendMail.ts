@@ -1,15 +1,14 @@
 import nodemailer from 'nodemailer';
 import hbs from 'handlebars';
 import fs from 'fs'
-import path from 'path';
-import { htmlToText } from 'html-to-text'
+import path from 'path';          
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.email_username,
+        user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD
     }
 });

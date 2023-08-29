@@ -1,9 +1,9 @@
-import db from '../../database/config/config';
-import response from '../../service/Response';
+import db from '../../config.database';
+import response from '../../utils/response';
 import express, { Express, Request, Response, NextFunction } from 'express';
-import catchAsync from '../../service/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import bcrypt from 'bcrypt';
-import factory from '../../service/factory';
+import factory from '../../utils/factory';
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
