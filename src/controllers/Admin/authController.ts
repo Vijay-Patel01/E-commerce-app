@@ -5,6 +5,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import catchAsync from '../../service/catchAsync';
 import bcrypt from 'bcrypt';
 import { Op } from 'sequelize'
+import Email from '../../service/sendMail';
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env' });
 
@@ -25,6 +26,8 @@ const signup = catchAsync(async (req: Request, res: Response, next: NextFunction
     if (user) {
         const id = user.id
         const token = jwtToken.sign({ id }, process.env.JWT_SECRET_KEY as string, { expiresIn: process.env.JWT_EXPIRES_IN });
+        const url = `${req.protocol}://${req.get('host')}/me`;
+        Email(user, 'welcomeEmail', '');
         return response.response(res, 201, { user, token, }, 'SignUp successful');
     }
     return response.errorResponse(res, 400, 'Error creating user');
@@ -59,7 +62,7 @@ const vendorLogin = catchAsync(async (req: Request, res: Response,) => {
         whereCase = { username: res.locals.vendor.username }
     }
     const vendor = await Vendor.findOne({
-        where:  whereCase 
+        where: whereCase
     });
     if (!vendor) {
         return response.errorResponse(res, 400, 'Invalid email or password');
@@ -76,15 +79,29 @@ const vendorLogin = catchAsync(async (req: Request, res: Response,) => {
     return response.response(res, 201, { vendor, token }, 'SignIn successful');
 });
 
+const changePassword = catchAsync(async (req: Request, res: Response,) => {
+    const user = await User.findOne({ where: { id: res.locals.user.id } });
+    const isMatch = await bcrypt.compare(res.locals.changePassword.currentPassword, user.password);
+    if (!isMatch) {
+        return response.errorResponse(res, 400, 'Invalid current password');
+    }
+    if (res.locals.changePassword.currentPassword === res.locals.changePassword.newPassword) {
+        return response.errorResponse(res, 400, 'New password cannot be same as current password');
+    }
+    const round: number = Number(process.env.BCRYPT_ROUND) || 12;
+    const hashPassword = await bcrypt.hash(res.locals.changePassword.newPassword, round);
+    const updateUser = await User.update({ password: hashPassword }, { where: { id: res.locals.user.id } });
+    const token = '';
+    if (updateUser) {
+        return response.response(res, 200, { token }, 'Password changed successfully. please login again with this password');
+    }
+    return response.errorResponse(res, 400, 'Error changing password');
+});
+
 const logout = catchAsync(async (req: Request, res: Response,) => {
-    const authHeader: any = req.headers["authorization"];
-    jwtToken.sign(authHeader, "", { expiresIn: 1 }, (logout, err) => {
-        if (logout) {
-            return response.response(res, 200, {}, 'Logout successful');
-        } else {
-            return response.errorResponse(res, 400, 'Logout failed');
-        }
-    });
+    const token = ''
+    return response.response(res, 200, {token}, 'Logout successful');
+
 });
 
 
@@ -93,5 +110,6 @@ export default {
     signup,
     login,
     vendorLogin,
-    logout
+    logout,
+    changePassword
 }

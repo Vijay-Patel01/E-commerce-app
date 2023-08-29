@@ -93,11 +93,27 @@ const userUpdate = async (req: Request, res: Response, next: NextFunction) => {
         next();
 }
 
+const changePassword = async(req: Request, res: Response, next: NextFunction) => {
+    const body = joi.object({
+        currentPassword: joi.string().required(),
+        currentConfirmPassword: joi.valid(joi.ref('currentPassword')).required(),
+        newPassword: joi.string().min(8).max(32).required(),
+        newConfirmPassword: joi.valid(joi.ref('newPassword')).required(),
+    });
+    const { error, value } = body.validate(req.body);
+    if (error) {
+        return validationResponse(res,error);
+    };
+    res.locals.changePassword = value;
+    next();
+}
+
 export default {
     authValidation,
     loginValidation,
     vendorAddValidation,
     vendorLoginValidation,
     userUpdate,
-    vendorUpdate
+    vendorUpdate,
+    changePassword
 }
