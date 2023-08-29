@@ -1,12 +1,11 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });
+import config from './config';
 
-const dbName = process.env.DB_NAME as string;
-const dbUser = process.env.DB_USER as string;
-const dbPassword = process.env.DB_PASSWORD;
-const dbHost = process.env.DB_HOST;
-const dbPort = process.env.DB_PORT;
+const dbName = config.DATABASE.DATABASE as string;
+const dbUser = config.DATABASE.USER as string;
+const dbPassword = config.DATABASE.PASSWORD;
+const dbHost = config.DATABASE.HOST;
+const dbPort = config.DATABASE.PORT;
 
 const sequelize = new Sequelize(`postgres://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`, { dialect: "postgres" });
 

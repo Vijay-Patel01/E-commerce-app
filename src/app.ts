@@ -5,12 +5,13 @@ import db from './config.database';
 import routes from './config.route';
 import morgan from 'morgan';
 import cors from 'cors';
+import config from './config';
 
 
 const app: Express = express();
 dotenv.config({ path: './.env' });
 
-const port = process.env.APP_PORT || 3000;
+const port = config.APP.PORT;
 
 app.use(morgan('dev'));
 app.use(cors());

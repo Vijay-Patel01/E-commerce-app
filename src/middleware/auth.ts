@@ -1,6 +1,5 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
-import { promisify } from 'util';
-import jwt_decode from "jwt-decode";
+import jwt from '../utils/jwt';
 import db from '../config.database';
 import catchAsync from '../utils/catchAsync';
 import response from '../utils/response';
@@ -12,22 +11,18 @@ const isLoggedIn = catchAsync(async (req: Request, res: Response, next: NextFunc
     const token = req.headers?.authorization?.replace('Bearer ', '')?.replace('bearer ', '').trim();
 
     if (token) {
-        const decoded: any = jwt_decode(token);
-        if (decoded.email) {
+        const decoded: any = jwt.decodeToken(token);
+        if (decoded.type === 'vendor') {
             const loginVendor = await Vendor.findOne({ where: { email: decoded.email } });
             if (!loginVendor) {
                 return response.errorResponse(res, 401, 'Unauthorized, Only vendor can access this route');
             }
             res.locals.vendor = loginVendor;
-            console.log(-2);
-
             return next();
-
         }
-        if (decoded.id) {
+        if (decoded.type === 'user') {
             const loginUser = await User.findOne({ where: { id: decoded.id } });
             if (!loginUser) {
-
                 return response.errorResponse(res, 401, 'Unauthorized, Invalid token');
             }
             res.locals.user = loginUser;
