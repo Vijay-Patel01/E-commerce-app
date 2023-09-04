@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import config from './config';
+import config from '../src/config';
 
 const dbName = config.DATABASE.DATABASE as string;
 const dbUser = config.DATABASE.USER as string;
@@ -19,11 +19,11 @@ const db: any = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require('./modules/user/user.model')(sequelize, DataTypes);
-db.vendors = require('./modules/vendor/vendor.model')(sequelize, DataTypes);
-db.products = require('./modules/product/product.model')(sequelize, DataTypes);
-db.carts = require('./modules/product/cart/cart.model')(sequelize, DataTypes);
-db.verifications = require('./modules/user/auth/verification.model')(sequelize, DataTypes);
+db.users = require('./models/user.model')(sequelize, DataTypes);
+db.vendors = require('./models/vendor.model')(sequelize, DataTypes);
+db.products = require('./models/product.model')(sequelize, DataTypes);
+db.carts = require('./models/cart.model')(sequelize, DataTypes);
+db.verifications = require('./models/verification.model')(sequelize, DataTypes);
 
 // db.carts.associate(db);
 

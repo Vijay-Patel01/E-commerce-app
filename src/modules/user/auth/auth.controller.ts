@@ -1,13 +1,15 @@
-import db from '../../../config.database';
+import db from '../../../../database/config.database';
 import response from '../../../utils/response';
 import {Request, Response} from 'express';
 import catchAsync from '../../../utils/catchAsync';
 import Email from '../../../utils/sendMail';
 import jwt from '../../../utils/jwt';
 import bcrypt from '../../../utils/bcrypt';
+import otp from '../../../utils/otp'
 
 const User = db.users;
 const Vendor = db.vendors;
+const Verification = db.verifications;
 
 const signup = catchAsync(async (req: Request, res: Response) => {
     const alreadyUser = await User.findOne({where: {email: res.locals.user.email}});
@@ -18,9 +20,22 @@ const signup = catchAsync(async (req: Request, res: Response) => {
 
     const user = await User.create(res.locals.user);
     if (user) {
-        const token = jwt.createToken(user.id, 'user')
-        const url = `${req.protocol}://${req.get('host')}/me`;
+        const token = jwt.createToken(user.id, 'user');
         Email(user, 'welcomeEmail');
+        const currentOTP = await Verification.findOne({where: {type: 'OTP'}});
+        const updateOtp = {
+            userId: user.id,
+            code:otp
+        }
+        if (!currentOTP) {
+            await Verification.create({
+                userId: user.id,
+                type: 'OTP',
+                code: otp
+            });
+        } else {
+            await Verification.update(updateOtp, {where: {type: 'OTP'}})
+        }        
         return response.response(res, 201, {user, token,}, 'SignUp successful');
     }
     return response.errorResponse(res, 400, 'Error creating user');
@@ -42,7 +57,7 @@ const login = catchAsync(async (req: Request, res: Response,) => {
     return response.response(res, 201, {user, token}, 'SignIn successful');
 });
 
-const vendorLogin = catchAsync(async (req: Request, res: Response,) => {
+const vendorLogin = catchAsync(async (req: Request, res: Response) => {
     if (!res.locals.vendor.email && !res.locals.vendor.username) {
         return response.errorResponse(res, 400, 'Please enter email or username');
     }
@@ -87,9 +102,20 @@ const changePassword = catchAsync(async (req: Request, res: Response,) => {
     return response.errorResponse(res, 400, 'Error changing password');
 });
 
-const logout = catchAsync(async (req: Request, res: Response,) => {
+const logout = catchAsync(async (req: Request, res: Response) => {
     const token = ''
     return response.response(res, 200, {token}, 'Logout successful');
+});
+
+const signupVerification = catchAsync(async (req: Request, res: Response) => {
+    const otp = await Verification.findOne({where: {type: 'OTP'}});
+    const userOtp = res.locals.otp
+    
+    if (otp.code == userOtp.otp ) {
+        await User.update({verify:true},{where:{id:otp.userId}} );
+        return response.response(res, 200, {}, 'verify successful');
+    }
+    return response.errorResponse(res, 400, 'Wrong Otp please check your email');    
 });
 
 
@@ -98,5 +124,6 @@ export default {
     login,
     vendorLogin,
     logout,
-    changePassword
+    changePassword,
+    signupVerification
 }

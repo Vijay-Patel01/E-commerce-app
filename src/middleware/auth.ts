@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from '../utils/jwt';
-import db from '../config.database';
+import db from '../../database/config.database';
 import catchAsync from '../utils/catchAsync';
 import response from '../utils/response';
 

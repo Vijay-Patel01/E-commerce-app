@@ -1,7 +1,7 @@
 import express, { Express, Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv';
 import response from './utils/response';
-import db from './config.database';
+import db from '../database/config.database';
 import routes from './config.route';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -19,9 +19,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// db.sequelize.sync({ force : false }).then(() => {
-//   console.log("db has been re sync")
-// });
+//db.sequelize.sync({ force : true }).then(() => {
+//console.log("db has been re sync")
+//});
 
 app.use('/',routes);
 

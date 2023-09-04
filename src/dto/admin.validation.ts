@@ -13,7 +13,8 @@ const authValidation = async (req: Request, res: Response, next: NextFunction) =
         password: joi.string().min(8).max(32).required(),
         confirmPassword: joi.valid(joi.ref('password')).required(),
         role: joi.string().valid('admin', 'user').default('user'),
-        status: joi.string().valid('active', 'inactive').default('active')
+        status: joi.string().valid('active', 'inactive').default('active'),
+        verify:joi.string().valid('true','false').default('false'),
     });
     const { error, value } = body.validate(req.body);
     if (error) {
@@ -108,6 +109,19 @@ const changePassword = async(req: Request, res: Response, next: NextFunction) =>
     next();
 }
 
+const otpVerification = async(req: Request, res: Response, next: NextFunction) => {
+    const body = joi.object({
+        otp: joi.string().required()
+    });
+    const { error, value } = body.validate(req.body);
+    if (error) {
+        return validationResponse(res,error);
+    }
+    res.locals.otp = value;
+    next();
+
+}
+
 export default {
     authValidation,
     loginValidation,
@@ -115,5 +129,6 @@ export default {
     vendorLoginValidation,
     userUpdate,
     vendorUpdate,
-    changePassword
+    changePassword,
+    otpVerification
 }

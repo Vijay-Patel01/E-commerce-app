@@ -20,7 +20,11 @@ module.exports = (sequelize : any, DataTypes: any) => {
         },
         status:{
             type: DataTypes.STRING
+        },
+        verify:{
+            type: DataTypes.STRING
         }
+
     },{
         timestamps: true
     });
