@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from '../utils/jwt';
-import db from '../../database/config.database';
+import db from '../database/config.database';
 import catchAsync from '../utils/catchAsync';
 import response from '../utils/response';
 
@@ -13,7 +13,7 @@ const isLoggedIn = catchAsync(async (req: Request, res: Response, next: NextFunc
     if (token) {
         const decoded: any = jwt.decodeToken(token);
         if (decoded.type === 'vendor') {
-            const loginVendor = await Vendor.findOne({ where: { email: decoded.email } });
+            const loginVendor = await Vendor.findOne({ where: { id: decoded.id } });
             if (!loginVendor) {
                 return response.errorResponse(res, 401, 'Unauthorized, Only vendor can access this route');
             }

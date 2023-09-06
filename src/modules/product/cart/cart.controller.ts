@@ -1,4 +1,4 @@
-import db from '../../../../database/config.database';
+import db from '../../../database/config.database';
 import response from '../../../utils/response';
 import  {  Request, Response } from 'express';
 import catchAsync from '../../../utils/catchAsync';
@@ -13,6 +13,9 @@ const addCart = catchAsync(async (req: Request, res: Response) => {
     const product = await Product.findOne({ where: { id: productId } });
     if (!product) {
         return response.errorResponse(res, 400, 'Product not found with this productId');
+    }
+    if (product.stock < quantity) {
+        return response.errorResponse(res, 500,'Quantity is greater than available quantity in stock')
     }
     const currentCart = await Cart.findOne({ where: [{ productId }, { userId }] });
 

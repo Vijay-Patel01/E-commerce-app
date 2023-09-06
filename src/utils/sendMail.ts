@@ -5,9 +5,6 @@ import path from 'path';
 import config from '../config';
 import otp from '../utils/otp'
 
-
-console.log(otp);
-
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {

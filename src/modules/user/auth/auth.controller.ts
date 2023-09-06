@@ -1,4 +1,4 @@
-import db from '../../../../database/config.database';
+import db from '../../../database/config.database';
 import response from '../../../utils/response';
 import {Request, Response} from 'express';
 import catchAsync from '../../../utils/catchAsync';
@@ -20,7 +20,6 @@ const signup = catchAsync(async (req: Request, res: Response) => {
 
     const user = await User.create(res.locals.user);
     if (user) {
-        const token = jwt.createToken(user.id, 'user');
         Email(user, 'welcomeEmail');
         const currentOTP = await Verification.findOne({where: {type: 'OTP'}});
         const updateOtp = {
@@ -36,7 +35,7 @@ const signup = catchAsync(async (req: Request, res: Response) => {
         } else {
             await Verification.update(updateOtp, {where: {type: 'OTP'}})
         }        
-        return response.response(res, 201, {user, token,}, 'SignUp successful');
+        return response.response(res, 201, {user,}, 'SignUp successful');
     }
     return response.errorResponse(res, 400, 'Error creating user');
 });
@@ -45,6 +44,9 @@ const login = catchAsync(async (req: Request, res: Response,) => {
     const user = await User.findOne({where: {email: res.locals.user.email}});
     if (!user) {
         return response.errorResponse(res, 400, 'Invalid email or password');
+    }
+    if (user.verify === false) {
+        return response.errorResponse(res, 400, 'Your account is not verify Please verify first');
     }
     if (user.status === 'inactive') {
         return response.errorResponse(res, 400, 'Your account is inactive Please contact admin');
@@ -104,7 +106,7 @@ const changePassword = catchAsync(async (req: Request, res: Response,) => {
 
 const logout = catchAsync(async (req: Request, res: Response) => {
     const token = ''
-    return response.response(res, 200, {token}, 'Logout successful');
+    return response.response(res, 200, {}, 'Logout successful');
 });
 
 const signupVerification = catchAsync(async (req: Request, res: Response) => {
@@ -113,7 +115,8 @@ const signupVerification = catchAsync(async (req: Request, res: Response) => {
     
     if (otp.code == userOtp.otp ) {
         await User.update({verify:true},{where:{id:otp.userId}} );
-        return response.response(res, 200, {}, 'verify successful');
+        const token = jwt.createToken(otp.userId, 'user');
+        return response.response(res, 200, {token}, 'verify successful');
     }
     return response.errorResponse(res, 400, 'Wrong Otp please check your email');    
 });

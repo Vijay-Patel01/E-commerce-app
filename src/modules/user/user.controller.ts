@@ -1,4 +1,4 @@
-import db from '../../../database/config.database';
+import db from '../../database/config.database';
 import response from '../../utils/response';
 import  { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';

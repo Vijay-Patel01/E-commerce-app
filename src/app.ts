@@ -1,7 +1,7 @@
 import express, { Express, Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv';
 import response from './utils/response';
-import db from '../database/config.database';
+import db from './database/config.database';
 import routes from './config.route';
 import morgan from 'morgan';
 import cors from 'cors';
