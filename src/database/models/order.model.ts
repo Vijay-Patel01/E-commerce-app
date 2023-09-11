@@ -11,20 +11,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         userId:{
             type:DataTypes.STRING
         },
-        productId:{
-            type:DataTypes.STRING
-        },
-        quantity :{
-            type:DataTypes.INTEGER
-        },
-        price:{
-            type:DataTypes.DECIMAL(8,2)
-        },
         totalPrice:{
             type:DataTypes.DECIMAL(9,3)
-        },
-        paymentMethod:{
-            type:DataTypes.STRING
         },
         date:{
             type:DataTypes.DATE

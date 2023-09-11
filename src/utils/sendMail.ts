@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path';
 import config from '../config';
 import otp from '../utils/otp'
+import catchAsync from './catchAsync';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -14,6 +15,8 @@ const transporter = nodemailer.createTransport({
 });
 
 export default async function sendEmail(user: any, template: string) {
+    console.log(user.email);
+    
     const templateSource = fs.readFileSync(path.join(__dirname, `../views/${template}.hbs`), 'utf-8');
     const templateHbs = hbs.compile(templateSource);
     await transporter.sendMail({
@@ -24,5 +27,5 @@ export default async function sendEmail(user: any, template: string) {
     });
     console.log('Email sent');
 
-}
+};
 

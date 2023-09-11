@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/',routes);
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, res: Response) => {
   return res.status(err.statusCode || 500).json({
     status: err.status,
     message: err.message

@@ -6,6 +6,7 @@ import catchAsync from '../../../utils/catchAsync';
 const Order = db.orders;
 const Cart = db.carts;
 const Product = db.products;
+const OrderItem = db.orderItems;
 
 const placeOrder = catchAsync(async (req: Request, res: Response) => {
     let orderId;
@@ -34,21 +35,28 @@ const placeOrder = catchAsync(async (req: Request, res: Response) => {
     if (product.stock < res.locals.order.quantity) {
         return response.errorResponse(res, 400,'Quantity is greater than available quantity in stock')
     }
+    const orderItem = await OrderItem.create({
+        orderId,
+
+    });
     const totalPrice = product.price * res.locals.order.quantity;
-    const order = await Order.create({
+    const order = await Order.create({  
         orderId,
         userId : res.locals.user.id,
-        productId : res.locals.order.productId,
-        quantity : res.locals.order.quantity,
-        price : product.price,
-        totalPrice ,
-        paymentMethod: res.locals.order.paymentMethod,
+        totalPrice,
         date: Date.now(),
         status: res.locals.order.status
     });
     return response.response(res,201,{order},'Order place successful');
 });
 
+const getOrders = catchAsync(async (req: Request, res: Response) => {
+    const orders = await Order.findAll({
+        where:{userId: res.locals.user.id}
+    });
+    return response.response(res,200,{orders},"All Orders");
+});
 export default {
-    placeOrder
+    placeOrder,
+    getOrders
 }

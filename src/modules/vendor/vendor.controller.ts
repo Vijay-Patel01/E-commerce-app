@@ -47,8 +47,7 @@ const updateVendor = catchAsync(async (req: Request, res: Response) => {
 
 const getMyProduct = catchAsync(async (req: Request, res: Response) => {
     const id = res.locals.vendor.id;
-    console.log(id);
-    
+
     const products = await Product.findAll({
         where: { vendorId:id }
     });

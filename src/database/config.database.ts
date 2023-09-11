@@ -25,6 +25,7 @@ db.products = require('./models/product.model')(sequelize, DataTypes);
 db.carts = require('./models/cart.model')(sequelize, DataTypes);
 db.verifications = require('./models/verification.model')(sequelize, DataTypes);
 db.orders = require('./models/order.model')(sequelize, DataTypes);
+db.orderItems = require('./models/orderItem.model')(sequelize, DataTypes);
 
 // db.carts.associate(db);
 

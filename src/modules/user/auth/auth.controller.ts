@@ -21,19 +21,18 @@ const signup = catchAsync(async (req: Request, res: Response) => {
     const user = await User.create(res.locals.user);
     if (user) {
         Email(user, 'welcomeEmail');
-        const currentOTP = await Verification.findOne({where: {type: 'OTP'}});
+        const currentOTP = await Verification.findOne({where:[ {userId:user.id},{type: 'verificationCode'}]});
         const updateOtp = {
-            userId: user.id,
             code:otp
         }
         if (!currentOTP) {
             await Verification.create({
                 userId: user.id,
-                type: 'OTP',
+                type: 'verificationCode',
                 code: otp
             });
         } else {
-            await Verification.update(updateOtp, {where: {type: 'OTP'}})
+            await Verification.update(updateOtp, {where: {type: 'verificationCode'}})
         }        
         return response.response(res, 201, {user,}, 'SignUp successful');
     }
